@@ -1,0 +1,40 @@
+query BumpersQuery($purpose: String!, $calendarDateStart: CalendarDateTime!, $calendarDateEnd: CalendarDateTime!) {
+  cms {
+    bumpers (where: { purpose_contains_all: [$purpose] }) {
+      items {
+        video
+      }
+    }
+
+    stockMusics {
+      items {
+        music {
+          url
+        }
+      }
+    }
+  }
+
+  showcase {
+    projects (where:{ media:VIDEOS }, take: 10) {
+      name
+      members {
+        account {
+          name
+        }
+      }
+      media {
+        stream
+      }
+    }
+  }
+
+  calendar {
+    events(after: $calendarDateStart, before: $calendarDateEnd) {
+      id
+      title
+      calendarName
+      start
+    }
+  }
+}
