@@ -1,46 +1,60 @@
-import React, { useEffect, useReducer, useMemo } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Text from '@codeday/topo/Atom/Text';
 import Box from '@codeday/topo/Atom/Box';
 import { DateTime } from 'luxon';
+import ConfettiBg from './ConfettiBg';
 
-export default function CalendarSlide({ isVisible, onReady, onComplete, events }) {
-  const [elapsedSeconds, tick] = useReducer((i, reset) => reset ? 0 : i + 1, 0);
-  useEffect(() => {
-    if (!isVisible) return;
+export default class CalendarSlide extends Component {
+  UNSAFE_componentWillReceiveProps(newProps) {
+    if (typeof window === 'undefined') return;
 
-    const timeout = setTimeout(() => {
-      if(elapsedSeconds >= 15) { tick(true); onComplete(); }
-      else tick();
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [isVisible, elapsedSeconds, onComplete, events]);
+    if (this.props.isVisible !== newProps.isVisible) {
+      clearTimeout(this.timeout);
+      if (newProps.isVisible) {
+        this.timeout = setTimeout(newProps.onComplete, 15000);
+      }
+    }
+  }
 
-  useEffect(() => { tick(true); onReady(); }, [events]);
+  componentDidMount() {
+    setTimeout(this.props.onReady, 2000);
+  }
 
-  return (
-    <Box p={8}>
-      <Text bold fontSize="4xl">Coming Up</Text>
-      {events.slice(0,3).map((e) => (
-        <Box mb={12}>
-          <Text mb={0}>{e.calendarName}</Text>
-          <Text fontSize="3xl" bold mb={0}>{e.title}</Text>
-          <Text>
-            {DateTime.fromISO(e.start).setZone('America/Los_Angeles').toFormat('EEEE, MMMM d, yyyy @ h:mm a ZZZZ')}
-            {' ('}
-            {DateTime.fromISO(e.start).setZone('America/Denver').toFormat('h:mm a ZZZZ')}
-            {' / '}
-            {DateTime.fromISO(e.start).setZone('America/Chicago').toFormat('h:mm a ZZZZ')}
-            {' / '}
-            {DateTime.fromISO(e.start).setZone('America/New_York').toFormat('h:mm a ZZZZ')}
-            {' / '}
-            {DateTime.fromISO(e.start).setZone('UTC').toFormat('HH:mm ZZZZ')}
-            )
-          </Text>
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  render() {
+    const { events } = this.props;
+
+    return (
+      <>
+        <Box p={8} position="relative">
+          <Text bold fontSize="4xl">Coming Up</Text>
+          {events.slice(0,3).map((e) => (
+            <Box mb={12}>
+              <Text mb={0}>{e.calendarName}</Text>
+              <Text fontSize="3xl" bold mb={0}>{e.title}</Text>
+              <Text>
+                {DateTime.fromISO(e.start).setZone('America/Los_Angeles').toFormat('EEEE, MMMM d, yyyy @ h:mm a ZZZZ')}
+                {' ('}
+                {DateTime.fromISO(e.start).setZone('America/Denver').toFormat('h:mm a ZZZZ')}
+                {' / '}
+                {DateTime.fromISO(e.start).setZone('America/Chicago').toFormat('h:mm a ZZZZ')}
+                {' / '}
+                {DateTime.fromISO(e.start).setZone('America/New_York').toFormat('h:mm a ZZZZ')}
+                {' / '}
+                {DateTime.fromISO(e.start).setZone('UTC').toFormat('HH:mm ZZZZ')}
+                )
+              </Text>
+            </Box>
+          ))}
+          <ConfettiBg />
         </Box>
-      ))}
-    </Box>
-  );
+      </>
+    );
+  }
 }
 
 CalendarSlide.propTypes = {

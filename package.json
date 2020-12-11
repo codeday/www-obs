@@ -21,8 +21,10 @@
     "prop-types": "^15.7.2",
     "random-weighted-choice": "^0.1.4",
     "react": "^17.0.1",
+    "react-confetti": "^6.0.0",
     "react-dom": "^17.0.1",
     "react-player": "^2.7.0",
-    "react-typing-effect": "^2.0.4"
+    "react-typing-effect": "^2.0.4",
+    "react-use": "^15.3.4"
   }
 }

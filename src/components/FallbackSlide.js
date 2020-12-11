@@ -58,7 +58,7 @@ const hellos = [
 
 export default function FallbackSlide({ onComplete }) {
   useEffect(() => {
-    const interval = setInterval(onComplete, 10000);
+    const interval = setInterval(onComplete, 5000);
     return () => clearInterval(interval);
   }, [onComplete]);
 

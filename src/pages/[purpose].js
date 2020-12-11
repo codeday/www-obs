@@ -21,14 +21,18 @@ export default function Intro({ bumpers, projects, events, music }) {
     const filteredEvents = events.filter((e) => DateTime.fromISO(e.start) > cutoff);
 
     const choices = {
-      bumper: {
-        Component: SimpleVideoSlide,
-        props: { src: bumpers[state % bumpers.length] },
-      },
-      project: {
-        Component: ProjectSlide,
-        props: { project: projects[state % projects.length] },
-      },
+      ...(bumpers[state % bumpers.length] && {
+        bumper: {
+          Component: SimpleVideoSlide,
+          props: { src: bumpers[state % bumpers.length] },
+        },
+      }),
+      ...(projects[state % projects.length] && {
+        project: {
+          Component: ProjectSlide,
+          props: { project: projects[state % projects.length] },
+        },
+      }),
       ...(filteredEvents.length > 0 && {
         calendar: {
           Component: CalendarSlide,

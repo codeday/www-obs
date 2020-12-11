@@ -1,42 +1,62 @@
-import React, { useEffect, useReducer, useMemo } from 'react';
+import React, { Component, useEffect, useReducer, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Text from '@codeday/topo/Atom/Text';
 import Box from '@codeday/topo/Atom/Box';
 import PreloadedVideo from './PreloadedVideo';
 
-export default function ProjectSlide({ isVisible, onReady, onComplete, project }) {
-  const [elapsedSeconds, tick] = useReducer((i, reset) => reset ? 0 : i + 1, 0);
-  const { members, media, name } = project;
-  const videoSrc = media.filter((m) => m.stream)[0].stream;
+export default class ProjectSlide extends Component {
+  UNSAFE_componentWillReceiveProps(newProps) {
+    if (typeof window === 'undefined') return;
 
-  useEffect(() => {
-    if (!isVisible) return;
+    if (this.props.isVisible !== newProps.isVisible) {
+      clearTimeout(this.timeout);
+      if (newProps.isVisible) {
+        this.timeout = setTimeout(newProps.onComplete, 15000);
+      }
+    }
+  }
 
-    const timeout = setTimeout(() => {
-      if(elapsedSeconds >= 15) { tick(true); onComplete(); }
-      else tick();
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [isVisible, elapsedSeconds, onComplete, project]);
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
 
-  useEffect(() => tick(true), [project]);
+  render() {
+    const { members, media, name } = this.props.project;
+    const videoSrc = media.filter((m) => m.stream)[0].stream;
 
-  return useMemo(() => (
-    <Box p={8}>
-      <Text fontSize="xl" mb={-3} bold>Project Spotlight</Text>
-      <Text fontSize="4xl" bold mb={-3}>{name}</Text>
-      <Text fontSize="md" mb={2}>{members.map((m) => m.account.name).join(', ')}</Text>
-      <PreloadedVideo
-        isVisible={isVisible}
-        onReady={onReady}
-        onComplete={onComplete}
-        src={videoSrc}
-        neededPreloadSeconds={15}
-        height="60vh"
-        width="auto"
-      />
-    </Box>
-  ), [project, isVisible, onReady, onComplete, videoSrc]);
+    return (
+      <>
+        <Box bg="#000" width="100%" height="100%">
+          <PreloadedVideo
+            isVisible={this.props.isVisible}
+            onReady={this.props.onReady}
+            onComplete={this.props.onComplete}
+            src={videoSrc}
+            neededPreloadSeconds={15}
+            width="100%"
+            height="100%"
+          />
+        </Box>
+        {[1,2].map((i) => /* Wasn't dark enough on its own, yolo */ (
+          <Box
+            position="absolute"
+            zIndex={500}
+            top={0}
+            right={0}
+            left={0}
+            grad="darken.lg.180"
+            color="white"
+            p={4}
+            key={i}
+          >
+            <Text fontSize="xl" mb={-3} bold>Project Spotlight</Text>
+            <Text fontSize="4xl" bold mb={-3}>{name}</Text>
+            <Text fontSize="md" mb={2}>{members.map((m) => m.account.name).join(', ')}</Text>
+          </Box>
+        ))}
+      </>
+    );
+  }
 }
 
 ProjectSlide.propTypes = {
