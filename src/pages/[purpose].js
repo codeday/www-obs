@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import { apiFetch } from '@codeday/topo/utils';
 import { DateTime } from 'luxon';
 import rwc from 'random-weighted-choice';
@@ -8,6 +9,7 @@ import FallbackSlide from '../components/FallbackSlide';
 import SimpleVideoSlide from '../components/SimpleVideoSlide';
 import ProjectSlide from '../components/ProjectSlide';
 import CalendarSlide from '../components/CalendarSlide';
+import ShowYourWorkSlide from '../components/ShowYourWorkSlide';
 import { BumpersQuery } from './bumpers.gql';
 import Slide from '../components/Slide';
 
@@ -20,11 +22,17 @@ export default function Intro({ bumpers, projects, events, music }) {
     const cutoff = DateTime.local().plus({ hours: -1 });
     const filteredEvents = events.filter((e) => DateTime.fromISO(e.start) > cutoff);
 
+    const ambientBumpers = bumpers.filter((b) => b.ambient);
+
     const choices = {
+      showYourWork: {
+        Component: ShowYourWorkSlide,
+        props: {},
+      },
       ...(bumpers[state % bumpers.length] && {
         bumper: {
           Component: SimpleVideoSlide,
-          props: { src: bumpers[state % bumpers.length] },
+          props: { src: bumpers[state % bumpers.length].src },
         },
       }),
       ...(projects[state % projects.length] && {
@@ -36,15 +44,16 @@ export default function Intro({ bumpers, projects, events, music }) {
       ...(filteredEvents.length > 0 && {
         calendar: {
           Component: CalendarSlide,
-          props: { events: filteredEvents }
+          props: { events: filteredEvents, src: ambientBumpers[state % ambientBumpers.length]?.src }
         }
       })
     }
 
     const weights = [
-      { id: 'bumper', weight: 0.6 },
+      { id: 'bumper', weight: 0.4 },
       { id: 'project', weight: 0.3 },
       { id: 'calendar', weight: 0.1 },
+      { id: 'showYourWork', weight: 0.2 },
      ].filter(({ id }) => id in choices);
 
     const choice = choices[rwc(weights)];
@@ -59,6 +68,9 @@ export default function Intro({ bumpers, projects, events, music }) {
 
   return (
     <>
+      <Head>
+        <title>OBS Overlays</title>
+      </Head>
       <AudioPlayer tracks={music} />
       <LiveAndPreload fallbackComponent={FallbackSlide} getNextElement={getNextElement} />
     </>
@@ -83,7 +95,7 @@ export async function getServerSideProps({ params: { purpose } }) {
     props: {
       bumpers: results?.cms?.bumpers?.items
         .filter((v) => v.video?.playbackId && v.video?.ready)
-        .map((v) => `https://stream.mux.com/${v.video.playbackId}.m3u8`)
+        .map((v) => ({ ...v, src: `https://stream.mux.com/${v.video.playbackId}.m3u8` }))
         .sort(() => Math.random() > 0.5 ? 1 : -1),
       music: results?.cms?.stockMusics?.items
         .map((m) => m.music?.url)

@@ -16,7 +16,7 @@ export default class PreloadedVideo extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (!this.props.isVisible && nextProps.isVisible && this.player) {
-      this.player.seekTo(0);
+      this.player.seekTo(this.props.startAt || 0);
     }
   }
 
@@ -25,7 +25,7 @@ export default class PreloadedVideo extends Component {
   }
 
   render() {
-    const { src, isVisible, onReady, onComplete, neededPreloadSeconds, ...props } = this.props;
+    const { src, isVisible, onReady, onComplete, neededPreloadSeconds, startAt, ...props } = this.props;
     return (
       <ReactPlayer
         url={src}
@@ -61,7 +61,7 @@ export default class PreloadedVideo extends Component {
         this.player.seekTo(desiredTime);
       }
     } else {
-      this.player.seekTo(0);
+      this.player.seekTo(this.props.startAt || 0);
       this.props.onReady();
     }
   }
@@ -73,8 +73,10 @@ PreloadedVideo.propTypes = {
   onComplete: PropTypes.func.isRequired,
   neededPreloadSeconds: PropTypes.number,
   src: PropTypes.string.isRequired,
+  startAt: PropTypes.number,
 };
 
 PreloadedVideo.defaultProps = {
   neededPreloadSeconds: null,
+  startAt: 0,
 };

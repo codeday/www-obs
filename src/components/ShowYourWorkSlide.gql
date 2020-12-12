@@ -1,0 +1,14 @@
+query ShowYourWorkSlideQuery {
+  showYourWork {
+    messages(take: 40) {
+      id
+      text
+      imageUrl(width: 800, height: 800, fillBlur: true, strategy: FILL)
+      videoUrl
+      author {
+        picture(transform: { width: 128, height: 128, fit: CROP })
+        name
+      }
+    }
+	}
+}

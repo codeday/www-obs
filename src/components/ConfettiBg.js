@@ -14,10 +14,11 @@ export default function ConfettiBg() {
           width={width}
           height={height}
           colors={[
-            colors.red[300],
-            colors.red[400],
+            colors.cyan[500],
+            colors.green[500],
+            colors.purple[500],
+            colors.yellow[500],
             colors.red[500],
-            colors.red[700],
           ]}
         />
       </Box>

@@ -2,6 +2,7 @@ query BumpersQuery($purpose: String!, $calendarDateStart: CalendarDateTime!, $ca
   cms {
     bumpers (where: { purpose_contains_all: [$purpose] }) {
       items {
+        ambient
         video
       }
     }

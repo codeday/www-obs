@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Text from '@codeday/topo/Atom/Text';
 import Box from '@codeday/topo/Atom/Box';
 import { DateTime } from 'luxon';
-import ConfettiBg from './ConfettiBg';
+import PreloadedVideo from './PreloadedVideo';
 
 export default class CalendarSlide extends Component {
   UNSAFE_componentWillReceiveProps(newProps) {
@@ -18,22 +18,35 @@ export default class CalendarSlide extends Component {
   }
 
   componentDidMount() {
-    setTimeout(this.props.onReady, 2000);
+    if (!this.props.src) {
+      setTimeout(this.props.onReady, 200);
+    }
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeout);
   }
-
   render() {
-    const { events } = this.props;
+    const { events, isVisible, onReady, onComplete, src } = this.props;
 
     return (
       <>
-        <Box p={8} position="relative">
+        { src && (
+          <PreloadedVideo
+            isVisible={isVisible}
+            onReady={onReady}
+            onComplete={onComplete}
+            src={src}
+            width="100%"
+            height="auto"
+            z-index={100}
+          />
+        )}
+        <Box p={8} position="absolute" top={0} right={0} bottom={0} left={0} bg="red.600" opacity={0.9} zIndex={200} />
+        <Box p={8} position="absolute" top={0} right={0} bottom={0} left={0} zIndex={300}>
           <Text bold fontSize="4xl">Coming Up</Text>
           {events.slice(0,3).map((e) => (
-            <Box mb={12}>
+            <Box mb={12} key={e.title}>
               <Text mb={0}>{e.calendarName}</Text>
               <Text fontSize="3xl" bold mb={0}>{e.title}</Text>
               <Text>
@@ -50,7 +63,6 @@ export default class CalendarSlide extends Component {
               </Text>
             </Box>
           ))}
-          <ConfettiBg />
         </Box>
       </>
     );

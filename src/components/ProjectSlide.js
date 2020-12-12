@@ -11,7 +11,7 @@ export default class ProjectSlide extends Component {
     if (this.props.isVisible !== newProps.isVisible) {
       clearTimeout(this.timeout);
       if (newProps.isVisible) {
-        this.timeout = setTimeout(newProps.onComplete, 15000);
+        this.timeout = setTimeout(newProps.onComplete, 25000);
       }
     }
   }
@@ -35,6 +35,7 @@ export default class ProjectSlide extends Component {
             neededPreloadSeconds={15}
             width="100%"
             height="100%"
+            startAt={7}
           />
         </Box>
         {[1,2].map((i) => /* Wasn't dark enough on its own, yolo */ (
