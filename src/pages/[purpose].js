@@ -11,6 +11,7 @@ import ProjectSlide from '../components/ProjectSlide';
 import CalendarSlide from '../components/CalendarSlide';
 import ShowYourWorkSlide from '../components/ShowYourWorkSlide';
 import { BumpersQuery } from './bumpers.gql';
+import TwitchEmojiOverlay from '../components/TwitchEmojiOverlay';
 import Slide from '../components/Slide';
 
 export default function Intro({ bumpers, projects, events, music }) {
@@ -73,6 +74,7 @@ export default function Intro({ bumpers, projects, events, music }) {
       </Head>
       <AudioPlayer tracks={music} />
       <LiveAndPreload fallbackComponent={FallbackSlide} getNextElement={getNextElement} />
+      <TwitchEmojiOverlay channel={process.env.NEXT_PUBLIC_TWITCH_CHANNEL} />
     </>
   );
 }

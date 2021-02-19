@@ -24,8 +24,10 @@
     "react-confetti": "^6.0.0",
     "react-dom": "^17.0.1",
     "react-player": "^2.7.0",
+    "react-transition-group": "^4.4.1",
     "react-typing-effect": "^2.0.4",
     "react-use": "^15.3.4",
+    "tmi.js": "^1.7.1",
     "truncate": "^2.1.0"
   }
 }
