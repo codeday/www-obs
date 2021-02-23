@@ -42,7 +42,7 @@ export default class CalendarSlide extends Component {
             z-index={100}
           />
         )}
-        <Box p={8} position="absolute" top={0} right={0} bottom={0} left={0} bg="red.600" opacity={0.9} zIndex={200} />
+        <Box p={8} position="absolute" top={0} right={0} bottom={0} left={0} bg="red.600" opacity={0.75} zIndex={200} />
         <Box p={8} position="absolute" top={0} right={0} bottom={0} left={0} zIndex={300}>
           <Text bold fontSize="4xl">Coming Up</Text>
           {events.slice(0,3).map((e) => (
