@@ -20,7 +20,7 @@ export default function Intro({ bumpers, projects, events, music }) {
   const getNextElement = (state) => {
     // We have to filter these here because the livestream display could be up for hours or even days, and the events
     // list is only fetched when the page is loaded.
-    const cutoff = DateTime.local().plus({ hours: -1 });
+    const cutoff = DateTime.local().plus({ minutes: -20 });
     const filteredEvents = events.filter((e) => DateTime.fromISO(e.start) > cutoff);
 
     const ambientBumpers = bumpers.filter((b) => b.ambient);
