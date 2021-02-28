@@ -55,7 +55,7 @@ export default class PreloadedVideo extends Component {
 
 
     if ((this.props.neededPreloadSeconds && loadedSeconds < this.props.neededPreloadSeconds)
-        && loaded < 0.95) {
+        && loaded < 0.65) {
       const desiredTime = Math.max(0, loadedSeconds - 5);
       if (playedSeconds < desiredTime) {
         this.player.seekTo(desiredTime);
