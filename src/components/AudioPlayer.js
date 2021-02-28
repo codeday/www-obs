@@ -16,7 +16,7 @@ export default function AudioPlayer({ tracks }) {
   if (!playbackAllowed) return (
     <Box
       onClick={() => setPlaybackAllowed(true)}
-      zIndex={1000}
+      zIndex={2000}
       bg="blue.500"
       color="white"
       fontSize="2xl"

@@ -31,12 +31,18 @@ export default function TwitchEmojiOverlay({ channel }) {
     client.connect();
 
     client.on('message', (_, tags, message) => {
+      console.log(tags.emotes);
       const emoteImages = Object.keys(tags.emotes || {})
-        .map((id) => `https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0`)
+        .map((id) => ({ id, count: tags.emotes[id].length }))
+        .map(({ id, count }) => Array(Math.min(5, count || 1)).fill(`https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0`))
+        .reduce((accum, e) => [...accum, ...e], []);
 
       Object.keys(SPECIAL_EMOJI)
-        .filter((k) => message.includes(k))
-        .forEach((k) => emoteImages.push(SPECIAL_EMOJI[k]));
+        .filter((id) => message.includes(id))
+        .map((id) => ({ id, count: message.split(id).length - 1 }))
+        .map(({ id, count }) => Array(Math.min(5, count || 1)).fill(SPECIAL_EMOJI[id]))
+        .reduce((accum, e) => [...accum, ...e], [])
+        .forEach((emote) => emoteImages.push(emote));
 
       const emotes = emoteImages
         .map((image, i) => ({ id: `${tags.id}-${i}`, image, left: Math.random(), bottom: Math.random() }));
