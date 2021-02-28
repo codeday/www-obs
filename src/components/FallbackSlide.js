@@ -54,6 +54,7 @@ const hellos = [
   'Labas mano drauge!',
   'Hallo mäi Frënd!',
   'Здраво пријателе!',
+  'Ahoy Mateys!',
 ];
 
 export default function FallbackSlide({ onComplete }) {
