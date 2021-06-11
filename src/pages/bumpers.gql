@@ -19,11 +19,6 @@ query BumpersQuery($purpose: String!, $calendarDateStart: CalendarDateTime!, $ca
   showcase {
     projects (where: { media: VIDEOS, featured: true }, take: 50) {
       name
-      members {
-        account {
-          name
-        }
-      }
       media {
         stream
       }

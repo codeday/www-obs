@@ -1,6 +1,6 @@
 query ShowYourWorkSlideQuery {
   showYourWork {
-    messages(take: 40) {
+    messages(take: 20) {
       id
       text
       imageUrl(width: 800, height: 800, fillBlur: true, strategy: FILL)

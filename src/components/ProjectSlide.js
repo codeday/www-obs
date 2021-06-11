@@ -52,7 +52,6 @@ export default class ProjectSlide extends Component {
           >
             <Text fontSize="xl" mb={-3} bold>Project Spotlight</Text>
             <Text fontSize="4xl" bold mb={-3}>{name}</Text>
-            <Text fontSize="md" mb={2}>{members.map((m) => m.account.name).join(', ')}</Text>
           </Box>
         ))}
       </>
