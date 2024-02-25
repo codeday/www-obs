@@ -13,7 +13,7 @@ export default function AudioPlayer({ tracks }) {
     ref.current.play().catch(() => setPlaybackAllowed(false));
   }, [typeof window, ref.current, playbackAllowed, nowPlayingIndex]);
 
-  if (!playbackAllowed) return (
+  if (!playbackAllowed && (!window || (window.self === window.top)) return (
     <Box
       onClick={() => setPlaybackAllowed(true)}
       zIndex={2000}
